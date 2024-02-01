@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: consumer
+  namespace: confluent
+spec:
+  template:
+    metadata:
+      name: consumer
+      labels:
+        app: consume
+    spec:
+      containers:
+        - name: consumer
+          image: zeenia/consumer:latest
+          volumeMounts:
+            - name: consumer-properties-volume
+              mountPath: /mnt/consumer.properties
+              subPath: consumer.properties
+      #        initContainers:
+      #        - name: init-sleep
+      #          image: busybox
+      #          command: [ "sleep", "10" ]
+      volumes:
+        - name: consumer-properties-volume
+          configMap:
+            name: consumer-properties
+            items:
+              - key: "consumer.properties"
+                path: "consumer.properties"
+
+  replicas: 1
+  selector:
+    matchLabels:
+      app: consume
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: consumer
+spec:
+  clusterIP: None
