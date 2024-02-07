@@ -1,0 +1,53 @@
+#apiVersion: v1
+#kind: Secret
+#metadata:
+#  name: consumer-config
+#  namespace: confluent
+#type: Opaque
+#data:
+#  consumer.properties: Ym9vdHN0cmFwLnNlcnZlcnM9a2Fma2EtMC5rYWZrYS5jb25mbHVlbnQuc3ZjLmNsdXN0ZXIubG9jYWw6OTA5MgpzZWN1cml0eS5wcm90b2NvbD1TQVNMX1BMQUlOVEVYVApzYXNsLmphYXMuY29uZmlnPW9yZy5hcGFjaGUua2Fma2EuY29tbW9uLnNlY3VyaXR5LnBsYWluLlBsYWluTG9naW5Nb2R1bGUgcmVxdWlyZWQgXAogICB1c2VybmFtZT0iYWRtaW4iIFwKICAgcGFzc3dvcmQ9ImFkbWluLXNlY3JldCI7CnNhc2wubWVjaGFuaXNtPVBMQUlOCmtleS5kZXNlcmlhbGl6ZXI9b3JnLmFwYWNoZS5rYWZrYS5jb21tb24uc2VyaWFsaXphdGlvbi5TdHJpbmdEZXNlcmlhbGl6ZXIKdmFsdWUuZGVzZXJpYWxpemVyPW9yZy5hcGFjaGUua2Fma2EuY29tbW9uLnNlcmlhbGl6YXRpb24uU3RyaW5nRGVzZXJpYWxpemVyCgpncm91cC5pZD1zdWJzY3JpYmUodG9waWMpCmF1dG8ub2Zmc2V0LnJlc2V0PWVhcmxpZXN0
+#
+#---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: consumer
+  namespace: confluent
+spec:
+  template:
+    metadata:
+      name: consumer
+      labels:
+        app: consume
+    spec:
+      containers:
+        - name: consumer
+          image: zeenia/consumer:latest
+          volumeMounts:
+            - name: consumer-properties-volume
+              mountPath: /mnt/consumer.properties
+              subPath: consumer.properties
+      #        initContainers:
+      #        - name: init-sleep
+      #          image: busybox
+      #          command: [ "sleep", "10" ]
+      volumes:
+        - name: consumer-properties-volume
+          configMap:
+            name: consumer-properties
+            items:
+              - key: "consumer.properties"
+                path: "consumer.properties"
+
+  replicas: 1
+  selector:
+    matchLabels:
+      app: consume
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: consumer
+spec:
+  clusterIP: None
