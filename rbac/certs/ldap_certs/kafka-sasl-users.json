@@ -1,0 +1,13 @@
+{
+  "kafka_client": "kafka_client-secret",
+  "devuser": "dev-password",
+  "tim": "timdevelopers",
+  "george": "georgedevelopers",
+  "will": "willdevelopers",
+  "rahul": "rahuldevops",
+  "connect": "connectsystem",
+  "schema": "schemasystem",
+  "control": "controlsystem",
+  "deepak": "deepkadevops",
+  "tina": "tinadesigners"
+}

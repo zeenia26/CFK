@@ -1,0 +1,78 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: openldap
+  namespace: confluent
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: openldap
+  template:
+    metadata:
+      name: openldap
+      namespace: confluent
+      labels:
+        app: openldap
+    spec:
+      containers:
+        - name: openldap
+          image: avinashupadhya99/example_com_openldap:1.0.0
+          args:
+          - --copy-service
+          - --loglevel=debug
+          ports:
+          - containerPort: 389
+            name: ldap
+          - containerPort: 636
+            name: ldaps
+          env:
+          - name: "LDAP_TLS_CA_CRT_FILENAME"
+            value: ca.crt
+          - name: "LDAP_TLS_KEY_FILENAME"
+            value: ldap.key
+          - name: "LDAP_TLS_CRT_FILENAME"
+            value: ldap.crt
+          - name: "LDAP_TLS_VERIFY_CLIENT"
+            value: try
+          - name: "LDAP_ORGANISATION"
+            value: "Example Company"
+          - name: "LDAP_DOMAIN"
+            value: "example.com"
+          - name: "LDAP_ADMIN_PASSWORD"
+            value: "secret"
+          - name: "LDAP_BASE_DN"
+            value: "dc=example,dc=com"
+          volumeMounts:
+            - name: sslcerts-volume
+              mountPath: /container/service/slapd/assets/certs
+
+      volumes:
+      - name: sslcerts-volume
+        secret:
+          secretName: tls-ldap-sslcerts
+#            LDAP_ORGANISATION: "Example Company"
+#            LDAP_DOMAIN: "example.com"
+#            LDAP_ADMIN_PASSWORD: "secret"
+#            LDAP_BASE_DN: "dc=example,dc=com"
+#            LDAP_TLS_VERIFY_CLIENT: try
+#          command: ["--loglevel", "debug"]
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ldap
+  namespace: confluent
+  labels:
+    app: openldap
+spec:
+  ports:
+    - port: 389
+      name: ldap
+    - port: 636
+      name: ldaps
+  clusterIP: None
+  selector:
+    app: openldap

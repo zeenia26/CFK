@@ -1,0 +1,23 @@
+---
+services:
+
+  openldap:
+    image: osixia/openldap:1.3.0
+    hostname: openldap
+    container_name: openldap
+    ports: 
+      - "10389:389"
+      - "10636:636"
+    environment:
+        LDAP_TLS_CRT_FILENAME: server.cert
+        LDAP_TLS_KEY_FILENAME: server_key.pem
+        LDAP_TLS_CA_CRT_FILENAME: ca-cert
+        LDAP_TLS_VERIFY_CLIENT: try
+        LDAP_ORGANISATION: "ConfluentDemo"
+        LDAP_DOMAIN: "confluentdemo.io"
+        LDAP_BASE_DN: "dc=confluentdemo,dc=io"
+    volumes:
+        - ./users.ldif:/container/service/slapd/assets/config/bootstrap/ldif/custom/users.ldif
+        - /home/platformatory/Documents/rbac/ldap/certs:/container/service/slapd/assets/certs
+          #- /home/platformatory/mtls/server.keystore.jks:/container/service/slapd/assets/certs/server.keystore.jks
+    command: "--copy-service --loglevel debug"

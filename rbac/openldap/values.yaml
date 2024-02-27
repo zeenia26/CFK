@@ -1,0 +1,13 @@
+name: openldap
+image: avinashupadhya99/example_com_openldap:1.0.0
+tls:
+  enabled: true
+  fullchain: |-
+  privkey: |-
+  cacerts: |-
+
+env:
+  LDAP_ORGANIZATION: "Example Company."
+  LDAP_DOMAIN: "example.com"
+  LDAP_ADMIN_PASSWORD: "secret"
+  LDAP_BASE_DN: "dc=example,dc=com"

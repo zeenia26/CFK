@@ -1,0 +1,128 @@
+
+#---
+#apiVersion: platform.confluent.io/v1beta1
+#kind: ConfluentRolebinding
+#metadata:
+#  name: topic-rb
+#  namespace: confluent
+#spec:
+#  principal:
+#    type: user
+#    name: tim
+#  clustersScopeByIds:
+#    kafkaClusterId: SthITo1cQ8CKQvN0X3Wh5A
+#  resourcePatterns:
+#    - name: "role"
+#      patternType: LITERAL
+#      resourceType: Group
+#  role: ResourceOwner
+
+---
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
+  name: topic-write-rb
+  namespace: confluent
+spec:
+  principal:
+    type: user
+    name: george
+  role: DeveloperWrite
+  clustersScopeByIds:
+    kafkaClusterId: SthITo1cQ8CKQvN0X3Wh5A
+  resourcePatterns:
+    - name: "role"
+      patternType: LITERAL
+      resourceType: Topic
+
+---
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
+  name: topic-read-rb
+  namespace: confluent
+spec:
+  principal:
+    type: user
+    name: will
+  role: DeveloperRead
+  clustersScopeByIds:
+    kafkaClusterId: SthITo1cQ8CKQvN0X3Wh5A
+  resourcePatterns:
+    - name: "role"
+      patternType: LITERAL
+      resourceType: Topic
+
+---
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
+  name: topic-read-group-rb
+  namespace: confluent
+spec:
+  principal:
+    type: user
+    name: will
+  role: DeveloperRead
+  clustersScopeByIds:
+    kafkaClusterId: SthITo1cQ8CKQvN0X3Wh5A
+  resourcePatterns:
+    - name: "console_conusmer-"
+      patternType: PREFIXED
+      resourceType: Group
+
+---
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
+  name: topic2-rb
+  namespace: confluent
+spec:
+  principal:
+    type: user
+    name: deepak
+  clustersScopeByIds:
+    kafkaClusterId: SthITo1cQ8CKQvN0X3Wh5A
+  resourcePatterns:
+    - name: "rbac-role"
+      patternType: LITERAL
+      resourceType: Group
+  role: ResourceOwner
+
+---
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
+  name: topic2-write-rb
+  namespace: confluent
+spec:
+  principal:
+    type: user
+    name: will
+  role: DeveloperWrite
+  clustersScopeByIds:
+    kafkaClusterId: SthITo1cQ8CKQvN0X3Wh5A
+  resourcePatterns:
+    - name: "rbac-role"
+      patternType: LITERAL
+      resourceType: Topic
+
+---
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
+  name: topic2-read-rb
+  namespace: confluent
+spec:
+  principal:
+    type: user
+    name: tina
+  role: DeveloperRead
+  clustersScopeByIds:
+    kafkaClusterId: SthITo1cQ8CKQvN0X3Wh5A
+  resourcePatterns:
+    - name: "rbac-role"
+      patternType: LITERAL
+      resourceType: Topic
+
+

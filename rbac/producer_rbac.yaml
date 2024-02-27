@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: producer
+  namespace: confluent
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: produce
+  template:
+    metadata:
+      name: producer
+      labels:
+        app: produce
+    spec:
+      containers:
+      - name: rbac
+        image: confluentinc/cp-kafka:latest
+        command:
+          - /bin/sh
+          - -c
+          - |
+            kafka-producer-perf-test \
+            --topic rbacrole \
+            --record-size 524288 \
+            --throughput 64 \
+            --producer.config /mnt/producer.properties \
+            --num-records 100000
+        volumeMounts:
+        - name: producer-properties
+          mountPath: /mnt/producer.properties
+          subPath: producer.properties
+        - name: kafka-ssl-manualcerts
+          mountPath: /mnt/sslcerts
+      volumes:
+      - name: kafka-ssl-manualcerts
+        secret:
+          secretName: kafka-pkcs12
+      - name: producer-properties
+        configMap:
+          name: producer-properties
+          items:
+            - key: "producer.properties"
+              path: "producer.properties"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: producer
+spec:
+  clusterIP: None
+
+---
+apiVersion: platform.confluent.io/v1beta1
+kind: KafkaTopic
+metadata:
+  name: rbacrole
+  namespace: confluent
+spec:
+  name: rbacrole
+  replicas: 1
+  partitionCount: 1
+  configs:
+    cleanup.policy: "delete"
+  kafkaRestClassRef:
+    name: default

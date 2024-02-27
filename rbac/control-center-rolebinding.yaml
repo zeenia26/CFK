@@ -1,0 +1,44 @@
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
+  name: admin-rb
+  namespace: confluent
+spec:
+  principal:
+    type: user
+    name: rahul
+  role: ClusterAdmin
+  kafkaRestClassRef:
+    name: default
+
+---
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
+  name: schema-rb
+  namespace: confluent
+spec:
+  principal:
+    type: user
+    name: schema
+  clustersScopeByIds:
+    schemaRegistryClusterId: id_schemaregistry_confluent
+  role: SystemAdmin
+  kafkaRestClassRef:
+    name: default
+
+---
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
+  name: connect-rb
+  namespace: confluent
+spec:
+  principal:
+    type: user
+    name: connect
+  clustersScopeByIds:
+    connectClusterId: confluent.connect
+  role: SystemAdmin
+  kafkaRestClassRef:
+    name: default

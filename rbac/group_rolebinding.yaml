@@ -1,0 +1,141 @@
+---
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
+  name: group-owner-rb
+  namespace: confluent
+spec:
+  principal:
+    type: group
+    name: KafkaAdmin
+  role: ResourceOwner
+  clustersScopeByIds:
+    kafkaClusterId: 9bg7lRs8TPC23sDNFgLZBQ
+  resourcePatterns:
+    - name: "role"
+      patternType: LITERAL
+      resourceType: Topic
+
+---
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
+  name: group-write-rb
+  namespace: confluent
+spec:
+  principal:
+    type: group
+    name: BackendDev
+  role: DeveloperWrite
+  clustersScopeByIds:
+    kafkaClusterId: 9bg7lRs8TPC23sDNFgLZBQ
+  resourcePatterns:
+    - name: "role"
+      patternType: LITERAL
+      resourceType: Topic
+---
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
+  name: group-read-consumer-group-rb
+  namespace: confluent
+spec:
+  principal:
+    type: group
+    name: FrontendDev
+  role: DeveloperRead
+  clustersScopeByIds:
+    kafkaClusterId: 9bg7lRs8TPC23sDNFgLZBQ
+  resourcePatterns:
+    - name: "console-consumer-"
+      patternType: PREFIXED
+      resourceType: Group
+
+---
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
+  name: group-read-rb
+  namespace: confluent
+spec:
+  principal:
+    type: group
+    name: FrontendDev
+  role: DeveloperRead
+  clustersScopeByIds:
+    kafkaClusterId: 9bg7lRs8TPC23sDNFgLZBQ
+  resourcePatterns:
+    - name: "role"
+      patternType: LITERAL
+      resourceType: Topic
+
+---
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
+  name: topic2-group-owner-rb
+  namespace: confluent
+spec:
+  principal:
+    type: group
+    name: KafkaDev
+  role: ResourceOwner
+  clustersScopeByIds:
+    kafkaClusterId: 9bg7lRs8TPC23sDNFgLZBQ
+  resourcePatterns:
+    - name: "rbacrole"
+      patternType: LITERAL
+      resourceType: Topic
+
+---
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
+  name: topic2-group-write-rb
+  namespace: confluent
+spec:
+  principal:
+    type: group
+    name: FrontendDev
+  role: DeveloperWrite
+  clustersScopeByIds:
+    kafkaClusterId: 9bg7lRs8TPC23sDNFgLZBQ
+  resourcePatterns:
+    - name: "rbacrole"
+      patternType: LITERAL
+      resourceType: Topic
+---
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
+  name: topic2-group-read-consumer-group-rb
+  namespace: confluent
+spec:
+  principal:
+    type: group
+    name: BackendDev
+  role: DeveloperRead
+  clustersScopeByIds:
+    kafkaClusterId: 9bg7lRs8TPC23sDNFgLZBQ
+  resourcePatterns:
+    - name: "console-consumer-"
+      patternType: PREFIXED
+      resourceType: Group
+
+---
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
+  name: topic2-group-read-rb
+  namespace: confluent
+spec:
+  principal:
+    type: group
+    name: BackendDev
+  role: DeveloperRead
+  clustersScopeByIds:
+    kafkaClusterId: 9bg7lRs8TPC23sDNFgLZBQ
+  resourcePatterns:
+    - name: "rbacrole"
+      patternType: LITERAL
+      resourceType: Topic
