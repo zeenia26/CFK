@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment 
+metadata:
+  name: producer
+  namespace: confluent
+spec: 
+  template:
+    metadata:
+      name: producer
+      labels:
+        app: produce
+    spec:
+      initContainers:
+      - name: init-sleep 
+        image: busybox
+        command: ["sleep","infinite"]
+      containers:
+      - name: producer
+        image: zeenia/prod:latest
+        volumeMounts:
+        - name: client-properties-volume
+          mountPath: /mnt/client.properties
+          subPath: client.properties
+      volumes:
+        - name: client-properties-volume
+          configMap:
+            name: client-properties
+  replicas: 1
+  selector: 
+    matchLabels:
+      app: produce
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: producer
+spec: 
+  clusterIP: None
+
+---
+apiVersion: platform.confluent.io/v1beta1
+kind: KafkaTopic
+metadata: 
+  name: role
+  namespace: confluent
+spec: 
+  name: role
+  replicas: 1 
+  configs:
+    cleanup.policy: "delete"
