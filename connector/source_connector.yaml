@@ -1,0 +1,35 @@
+apiVersion: platform.confluent.io/v1beta1
+kind: Connector
+metadata:
+  name: connector-jdbc-source
+  namespace: confluent
+spec:
+  name: connector-jdbc-source
+  class: "io.confluent.connect.jdbc.JdbcSourceConnector"
+  taskMax: 2
+  connectClusterRef:
+    name: connect
+  configs:
+    topic.prefix: "jdbc-"
+    key.converter: "io.confluent.connect.avro.AvroConverter"
+    key.converter.schema.registry.url: "https://schemaregistry.confluent.svc.cluster.local:8081"
+    key.converter.schema.registry.ssl.truststore.location: "/mnt/sslcerts/truststore.jks"
+    key.converter.schema.registry.ssl.truststore.password: "${file:/mnt/sslcerts/jksPassword.txt:jksPassword}"
+    key.converter.schema.registry.ssl.keystore.location: "/mnt/sslcerts/keystore.jks"
+    key.converter.schema.registry.ssl.keystore.password: "${file:/mnt/sslcerts/jksPassword.txt:jksPassword}"
+    key.converter.schema.registry.ssl.key.password: "${file:/mnt/sslcerts/jksPassword.txt:jksPassword}"
+    value.converter: "io.confluent.connect.avro.AvroConverter"
+    value.converter.schema.registry.url: "https://schemaregistry.confluent.svc.cluster.local:8081"
+    value.converter.schema.registry.ssl.truststore.location: "/mnt/sslcerts/truststore.jks"
+    value.converter.schema.registry.ssl.truststore.password: "${file:/mnt/sslcerts/jksPassword.txt:jksPassword}"
+    value.converter.schema.registry.ssl.keystore.location: "/mnt/sslcerts/keystore.jks"
+    value.converter.schema.registry.ssl.keystore.password: "${file:/mnt/sslcerts/jksPassword.txt:jksPassword}"
+    value.converter.schema.registry.ssl.key.password: "${file:/mnt/sslcerts/jksPassword.txt:jksPassword}"
+    security.protocol: "SSL"
+    connection.url: "jdbc:postgresql://postgres:5432/postgresdb?user=zeenia&password=secret"
+    table.whitelist: "employees"
+    mode: "incrementing"
+    incrementing.column.name: "id"
+  restartPolicy:
+    type: OnFailure
+    maxRetry: 20

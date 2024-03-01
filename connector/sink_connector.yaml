@@ -1,0 +1,46 @@
+apiVersion: platform.confluent.io/v1beta1
+kind: Connector
+metadata:
+  name: connector-jdbc-sink
+  namespace: confluent
+spec:
+  name: connector-jdbc-sink
+  class: "io.confluent.connect.jdbc.JdbcSinkConnector"
+  taskMax: 2
+  connectClusterRef:
+    name: connect
+  connectRest:
+    endpoint: https://connect.confluent.svc.cluster.local:8083
+    authentication:
+      type: mtls
+    tls:
+      secretRef: connect-generated-jks
+  configs:
+    topics: "jdbc-employees"
+    connector.class: "io.confluent.connect.jdbc.JdbcSinkConnector"
+    key.converter.schema.registry.url: "https://schemaregistry.confluent.svc.cluster.local:8081"
+    key.converter.schema.registry.ssl.truststore.location: "/mnt/sslcerts/truststore.jks"
+    key.converter.schema.registry.ssl.truststore.password: "${file:/mnt/sslcerts/jksPassword.txt:jksPassword}"
+    key.converter.schema.registry.ssl.keystore.location: "/mnt/sslcerts/keystore.jks"
+    key.converter.schema.registry.ssl.keystore.password: "${file:/mnt/sslcerts/jksPassword.txt:jksPassword}"
+    key.converter.schema.registry.ssl.key.password: "${file:/mnt/sslcerts/jksPassword.txt:jksPassword}"
+    value.converter.schema.registry.url: "https://schemaregistry.confluent.svc.cluster.local:8081"
+    value.converter.schema.registry.ssl.truststore.location: "/mnt/sslcerts/truststore.jks"
+    value.converter.schema.registry.ssl.truststore.password: "${file:/mnt/sslcerts/jksPassword.txt:jksPassword}"
+    value.converter.schema.registry.ssl.keystore.location: "/mnt/sslcerts/keystore.jks"
+    value.converter.schema.registry.ssl.keystore.password: "${file:/mnt/sslcerts/jksPassword.txt:jksPassword}"
+    value.converter.schema.registry.ssl.key.password: "${file:/mnt/sslcerts/jksPassword.txt:jksPassword}"
+    security.protocol: "SSL"
+    connection.url: "jdbc:mysql://mysql:3306/mysql?allowPublicKeyRetrieval=true"
+    connection.user: "zeenu"
+    connection.password: "secret"
+    table.name.format: "employees"
+    delete.enabled: "false"
+    auto.evolve: "true"
+    insert.mode: "upsert"
+    pk.mode: "record_value"
+    pk.field: "id"
+    auto.create: "true"
+  restartPolicy:
+    type: OnFailure
+    maxRetry: 20
